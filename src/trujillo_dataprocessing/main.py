@@ -64,7 +64,7 @@ def make_torchgeo_friendly(src_root, dst_root):
 
     for base_time, img_dir, lbl_dir in im_lab_pairs:
         print(
-            f"{src_root / img_dir} -> {dst_root / img_dir + '_timestamped'} and {src_root / lbl_dir} -> {dst_root / lbl_dir + '_georef_timestamped'} ... "
+            f"{src_root / img_dir} -> {dst_root / (img_dir + '_timestamped')} and {src_root / lbl_dir} -> {dst_root / (lbl_dir + '_georef_timestamped')} ... "
         )
         georeference_and_timestamp_images_and_masks(
             root_dir=src_root,
