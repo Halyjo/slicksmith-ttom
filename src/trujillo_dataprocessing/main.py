@@ -90,8 +90,8 @@ def show_example_data_pairs(data_root, figures_dir):
 def main():
     download_dst = Path("/storage/experiments/data/Trujillo/")
     processed_data_dst = Path("/storage/experiments/data/Trujillo_torchgeo/")
-    figures_dir = Path("/storage/experiments/data/Trujillo_examples/")
-    
+    _figures_dir = Path("/storage/experiments/data/Trujillo_examples/")
+
     # download_dst = Path("/Users/hjo109/Documents/data/Trujillo")
     # processed_data_dst = Path("/Users/hjo109/Documents/data/Trujillo_torchgeo/")
     # figures_dir = Path("/Users/hjo109/Documents/data/Trujillo_examples/")

@@ -13,7 +13,10 @@ from torchshow import torchshow as ts
 import lightning as L
 import os
 import torch
-from .BalancedRandomGeoSampler import BalancedRandomGeoSampler, build_integral_mask_from_raster_dataset
+from .BalancedRandomGeoSampler import (
+    BalancedRandomGeoSampler,
+    build_integral_mask_from_raster_dataset,
+)
 
 
 class TrujilloLabelDataset(RasterDataset):
@@ -91,7 +94,7 @@ class TrujilloDataModule(L.LightningDataModule):
         patch_size=(480, 480),
         split_only_train=False,
         num_workers=None,
-        pos_ratio: int=0.5,
+        pos_ratio: int = 0.5,
     ):
         super().__init__(
             dataset_class=IntersectionDataset,
@@ -178,8 +181,8 @@ class TrujilloDataModule(L.LightningDataModule):
 
         ## Test
         if self.num_test_patches:
-            test_integral_mask, test_integral_transform = build_integral_mask_from_raster_dataset(
-                self.test_dataset.datasets[1]
+            test_integral_mask, test_integral_transform = (
+                build_integral_mask_from_raster_dataset(self.test_dataset.datasets[1])
             )
             self.test_sampler = BalancedRandomGeoSampler(
                 self.test_dataset,

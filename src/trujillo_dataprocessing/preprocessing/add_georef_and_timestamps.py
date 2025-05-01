@@ -77,7 +77,9 @@ def georeference_and_timestamp_images_and_masks(
                 mask_data = mask_src.read(1)  # single-channel
                 mask_dtype = mask_src.dtypes[0]
         except Exception:
-            with rasterio.open(str(mask_path).replace(".tif", "_segmentation.tif")) as mask_src:
+            with rasterio.open(
+                str(mask_path).replace(".tif", "_segmentation.tif")
+            ) as mask_src:
                 mask_data = mask_src.read(1)  # single-channel
                 mask_dtype = mask_src.dtypes[0]
 
