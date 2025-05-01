@@ -1,5 +1,7 @@
-from download import download_file
-from add_georef_and_timestamps import georeference_and_timestamp_images_and_masks
+from src.download import download_file
+from preprocessing.add_georef_and_timestamps import (
+    georeference_and_timestamp_images_and_masks,
+)
 from pathlib import Path
 from utils import save_outputs
 import py7zr
