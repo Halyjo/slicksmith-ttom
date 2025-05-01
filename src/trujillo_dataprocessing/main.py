@@ -40,7 +40,7 @@ def make_torchgeo_friendly(src_root, dst_root):
 
     """
     # root_dir = Path("/storage/experiments/data/Trujillo")
-    dst_root = Path("/storage/experiments/data/Trujillo_torchgeo")
+    # dst_root = Path("/storage/experiments/data/Trujillo_torchgeo")
     save_outputs(dst_root / "add_georef_timestamp.log")
 
     assert src_root.exists()
