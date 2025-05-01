@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import requests
 import py7zr
-from scaling_waddle.utils import save_outputs
+from utils import save_outputs
 
 
 def download_file(url, dst_dir, filename=None, chunk_size=8192):
