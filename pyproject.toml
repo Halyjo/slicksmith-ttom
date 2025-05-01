@@ -3,8 +3,15 @@ name = "trujillo-dataprocessing"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = []
+requires-python = ">=3.11"
+dependencies = [
+    "lightning>=2.5.1.post0",
+    "py7zr>=0.22.0",
+    "rasterio>=1.4.3",
+    "torch>=2.7.0",
+    "torchgeo>=0.7.0",
+    "torchshow>=0.5.2",
+]
 
 [dependency-groups]
 dev = [
