@@ -72,9 +72,14 @@ def georeference_and_timestamp_images_and_masks(
             dst_img.write(image_data)
 
         # Read the corresponding mask
-        with rasterio.open(mask_path) as mask_src:
-            mask_data = mask_src.read(1)  # single-channel
-            mask_dtype = mask_src.dtypes[0]
+        try:
+            with rasterio.open(mask_path) as mask_src:
+                mask_data = mask_src.read(1)  # single-channel
+                mask_dtype = mask_src.dtypes[0]
+        except Exception:
+            with rasterio.open(str(mask_path).replace(".tif", "_segmentation.tif")) as mask_src:
+                mask_data = mask_src.read(1)  # single-channel
+                mask_dtype = mask_src.dtypes[0]
 
         # Write the mask with geospatial metadata and artificial timestamp tag
         timestamp = base_time + timedelta(seconds=index)
