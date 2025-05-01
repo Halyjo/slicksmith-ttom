@@ -25,9 +25,9 @@ class ConsoleOutputSaver:
 
 
 def save_outputs(path: os.PathLike = "outputs.log"):
-    """Make sure to save all stdout and stderr to file in addition to printing. 
-    
-    :param path: path to log to save outputs in. 
+    """Make sure to save all stdout and stderr to file in addition to printing.
+
+    :param path: path to log to save outputs in.
         Default is in the current working directory in a file called "outputs.log".
 
     Similar to tee, but works for k8s cluster without log accesses.
