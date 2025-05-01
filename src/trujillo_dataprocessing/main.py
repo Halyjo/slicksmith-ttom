@@ -1,5 +1,5 @@
-from src.download import download_file
-from preprocessing.add_georef_and_timestamps import (
+from trujillo_dataprocessing.download import download_file
+from trujillo_dataprocessing.preprocessing.add_georef_and_timestamps import (
     georeference_and_timestamp_images_and_masks,
 )
 from pathlib import Path
@@ -80,13 +80,25 @@ def make_torchgeo_friendly(src_root, dst_root):
         )
 
 
+def show_example_data_pairs(data_root, figures_dir):
+    """Load torchgeo datamodule with processed data, use GridGeoSampler to go through
+    a set of examples and save to figures_dir as jpeg.
+    """
+    pass
+
+
 def main():
     download_dst = Path("/storage/experiments/data/Trujillo/")
     processed_data_dst = Path("/storage/experiments/data/Trujillo_torchgeo/")
-    save_outputs(download_dst / "outputs.log")
+    figures_dir = Path("/storage/experiments/data/Trujillo_examples/")
+    
+    # download_dst = Path("/Users/hjo109/Documents/data/Trujillo")
+    # processed_data_dst = Path("/Users/hjo109/Documents/data/Trujillo_torchgeo/")
+    # figures_dir = Path("/Users/hjo109/Documents/data/Trujillo_examples/")
 
-    download_and_unzip(DATA_SOURCE_URLS, download_dst)
+    # download_and_unzip(DATA_SOURCE_URLS, download_dst)
     make_torchgeo_friendly(download_dst, processed_data_dst)
+    # show_example_data_pairs(processed_data_dst, figures_dir)
 
 
 if __name__ == "__main__":
