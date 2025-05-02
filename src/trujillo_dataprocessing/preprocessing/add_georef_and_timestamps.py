@@ -8,7 +8,8 @@ from tqdm import tqdm
 
 
 def make_timestamped_filename(index: int, base_time) -> str:
-    """Make artificial timestamp for torchgeo not to overlay images from same location at different times.
+    """Make artificial timestamp for torchgeo not to
+    overlay images from same location at different times.
     Make sure to use a non sensical time so no one will think they are real.
     """
     dt = base_time + timedelta(seconds=index)
@@ -25,9 +26,12 @@ def georeference_and_timestamp_images_and_masks(
     base_time=datetime(2050, 1, 1, 0, 0, 0),
 ):
     """
-    Add geospatial metadata to oil spill mask files by copying it from the corresponding Sentinel-1 image.
-    Rename both image and mask files to include artificial timestamps (set in year 2050) to avoid implying
-    real acquisition times. This ensures compatibility with TorchGeo's temporal logic.
+    Add geospatial metadata to oil spill mask files by copying it from the
+    corresponding Sentinel-1 image.
+    Rename both image and mask files to include artificial
+    timestamps (set in year 2050).
+    This is to avoid implying real acquisition times and
+    ensures compatibility with TorchGeo's temporal logic.
     """
     root_dir = Path(root_dir)
 
