@@ -1,13 +1,25 @@
+import os
+from datetime import datetime
+from pathlib import Path
+
+import py7zr
+from tap import Tap
+from torch.utils.data import DataLoader
+from torchgeo.datasets import IntersectionDataset, concat_samples, stack_samples
+from torchgeo.samplers import GridGeoSampler
+
+from trujillo_dataprocessing.deep_learning import (
+    TrujilloImageDataset,
+    TrujilloLabelDataset,
+)
 from trujillo_dataprocessing.download import download_file
 from trujillo_dataprocessing.preprocessing.add_georef_and_timestamps import (
     georeference_and_timestamp_images_and_masks,
 )
-from pathlib import Path
-from utils import save_outputs
-import py7zr
-from datetime import datetime
+from trujillo_dataprocessing.utils import save_console_outputs
+from trujillo_dataprocessing.vis import info_plots
 
-
+## Constants
 DATA_SOURCE_URLS = dict(
     train_val_masks="https://zenodo.org/records/8346860/files/01_Train_Val_Oil_Spill_mask.7z",
     train_val_lookalike_mask="https://zenodo.org/records/8253899/files/01_Train_Val_Lookalike_mask.7z",
@@ -17,6 +29,68 @@ DATA_SOURCE_URLS = dict(
     train_val_no_oil_mask="https://zenodo.org/records/8253899/files/01_Train_Val_No_Oil_mask.7z",
     test_images_masks="https://zenodo.org/records/13761290/files/02_Test_images_and_ground_truth.7z",
 )
+
+
+## Arguments Parser
+class MyArgs(Tap):
+    ## Tasks
+    download: bool = True
+    process_for_torchgeo: bool = True
+    make_info_plots: bool = True
+
+    ## Paths
+    download_dst: Path = Path("/storage/experiments/data/Trujillo/")
+    georef_and_timestamp_dst: Path = Path(
+        "/storage/experiments/data/Trujillo_torchgeo/"
+    )
+    figures_dir: Path = Path("/storage/experiments/data/Trujillo_examples/")
+
+    def process_args(self):
+        self.examples_img_src = self.georef_and_timestamp_dst / "Oil_timestamped"
+        self.examples_lbl_src = (
+            self.georef_and_timestamp_dst / "Mask_oil_georef_timestamped"
+        )
+
+
+def main():
+    """Does 3 things:
+    
+    Main
+    ----
+    1. download data
+    2. Process for torchgeo
+        - georeference labels and
+        - add artificial timestamps to both imgs and lbls
+    3. make info plots to better understand the data
+
+    Use this with typed-argument-parser.
+
+    Example
+    -------
+    Use the CLI for easiest use. Run the following to see options.
+    ```
+    python main.py --help
+    ```
+    """
+    args = MyArgs().parse_args()
+    save_console_outputs("console_outputs.log")
+    print(args)
+
+    if args.download:
+        download_and_unzip(DATA_SOURCE_URLS, args.download_dst)
+
+    if args.process_for_torchgeo:
+        make_torchgeo_friendly(args.download_dst, args.georef_and_timestamp_dst)
+
+    if args.make_info_plots:
+        save_examples_and_info_plots(
+            img_dir=args.examples_img_src,
+            lbl_dir=args.examples_lbl_src,
+            figures_dir=args.figures_dir,
+            n_batches=10,
+        )
+
+    print("Finished!")
 
 
 def download_and_unzip(data_source_urls, dst):
@@ -39,10 +113,6 @@ def make_torchgeo_friendly(src_root, dst_root):
         2. Adds pseudo timestamps to not overlap everything taken at the same location
 
     """
-    # root_dir = Path("/storage/experiments/data/Trujillo")
-    # dst_root = Path("/storage/experiments/data/Trujillo_torchgeo")
-    save_outputs(dst_root / "add_georef_timestamp.log")
-
     assert src_root.exists()
 
     im_lab_pairs = (
@@ -64,7 +134,9 @@ def make_torchgeo_friendly(src_root, dst_root):
 
     for base_time, img_dir, lbl_dir in im_lab_pairs:
         print(
-            f"{src_root / img_dir} -> {dst_root / (img_dir + '_timestamped')} and {src_root / lbl_dir} -> {dst_root / (lbl_dir + '_georef_timestamped')} ... "
+            f"{src_root / img_dir} -> {dst_root / (img_dir + '_timestamped')} "
+            "and {src_root / lbl_dir} -> "
+            "{dst_root / (lbl_dir + '_georef_timestamped')} ... "
         )
         georeference_and_timestamp_images_and_masks(
             root_dir=src_root,
@@ -76,29 +148,40 @@ def make_torchgeo_friendly(src_root, dst_root):
             base_time=base_time,
         )
         print(
-            f"Finished with {img_dir + '_timestamped'} and {lbl_dir + '_georef_timestamped'}. "
+            f"Finished with {img_dir + '_timestamped'} and "
+            " {lbl_dir + '_georef_timestamped'}. "
         )
 
 
-def show_example_data_pairs(data_root, figures_dir):
-    """Load torchgeo datamodule with processed data, use GridGeoSampler to go through
-    a set of examples and save to figures_dir as jpeg.
-    """
-    pass
+def save_examples_and_info_plots(
+    img_dir, lbl_dir, figures_dir: Path, n_batches: int = 10
+):
+    os.makedirs(figures_dir, exist_ok=True)
 
+    img_ds = TrujilloImageDataset(img_dir)
+    lbl_ds = TrujilloLabelDataset(lbl_dir)
 
-def main():
-    download_dst = Path("/storage/experiments/data/Trujillo/")
-    processed_data_dst = Path("/storage/experiments/data/Trujillo_torchgeo/")
-    _figures_dir = Path("/storage/experiments/data/Trujillo_examples/")
+    ds = IntersectionDataset(
+        dataset1=img_ds,
+        dataset2=lbl_ds,
+        collate_fn=concat_samples,
+    )
 
-    # download_dst = Path("/Users/hjo109/Documents/data/Trujillo")
-    # processed_data_dst = Path("/Users/hjo109/Documents/data/Trujillo_torchgeo/")
-    # figures_dir = Path("/Users/hjo109/Documents/data/Trujillo_examples/")
+    samp = GridGeoSampler(ds, (512, 512), (512, 512))
 
-    # download_and_unzip(DATA_SOURCE_URLS, download_dst)
-    make_torchgeo_friendly(download_dst, processed_data_dst)
-    # show_example_data_pairs(processed_data_dst, figures_dir)
+    dl = DataLoader(
+        ds,
+        sampler=samp,
+        batch_size=16,
+        collate_fn=stack_samples,
+    )
+
+    for i, sample in enumerate(dl):
+        img = sample["image"]
+        mask = sample["mask"]
+        info_plots(img, mask, figures_dir / str(i))
+        if i >= n_batches:
+            break
 
 
 if __name__ == "__main__":
