@@ -4,7 +4,7 @@ from pathlib import Path
 import py7zr
 import requests
 
-from trujillo_dataprocessing.utils import save_console_outputs
+from slicksmith_ttom.utils import save_console_outputs
 
 
 def download_file(url, dst_dir, filename=None, chunk_size=8192):
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         test_images_masks="https://zenodo.org/records/13761290/files/02_Test_images_and_ground_truth.7z",
     )
 
-    dst = Path("/storage/experiments/data/Trujillo/")
+    dst = Path("/storage/experiments/data/Ttom/")
 
     save_console_outputs(dst / "outputs.log")
 

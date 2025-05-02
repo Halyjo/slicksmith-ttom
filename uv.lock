@@ -2099,6 +2099,37 @@ wheels = [
 ]
 
 [[package]]
+name = "slicksmith-ttom"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "lightning" },
+    { name = "py7zr" },
+    { name = "rasterio" },
+    { name = "torch" },
+    { name = "torchgeo" },
+    { name = "typed-argument-parser" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "lightning", specifier = ">=2.5.1.post0" },
+    { name = "py7zr", specifier = ">=0.22.0" },
+    { name = "rasterio", specifier = ">=1.4.3" },
+    { name = "torch", specifier = ">=2.7.0" },
+    { name = "torchgeo", specifier = ">=0.7.0" },
+    { name = "typed-argument-parser", specifier = ">=1.10.1" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "ruff", specifier = ">=0.11.7" }]
+
+[[package]]
 name = "sympy"
 version = "1.14.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2294,37 +2325,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/7d/74/4bf2702b65e93accaa20397b74da46fb7a0356452c1bb94dbabaf0582930/triton-3.3.0-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:47bc87ad66fa4ef17968299acacecaab71ce40a238890acc6ad197c3abe2b8f1", size = 156516468 },
     { url = "https://files.pythonhosted.org/packages/0a/93/f28a696fa750b9b608baa236f8225dd3290e5aff27433b06143adc025961/triton-3.3.0-cp313-cp313t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:ce4700fc14032af1e049005ae94ba908e71cd6c2df682239aed08e49bc71b742", size = 156580729 },
 ]
-
-[[package]]
-name = "trujillo-dataprocessing"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "lightning" },
-    { name = "py7zr" },
-    { name = "rasterio" },
-    { name = "torch" },
-    { name = "torchgeo" },
-    { name = "typed-argument-parser" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "lightning", specifier = ">=2.5.1.post0" },
-    { name = "py7zr", specifier = ">=0.22.0" },
-    { name = "rasterio", specifier = ">=1.4.3" },
-    { name = "torch", specifier = ">=2.7.0" },
-    { name = "torchgeo", specifier = ">=0.7.0" },
-    { name = "typed-argument-parser", specifier = ">=1.10.1" },
-]
-
-[package.metadata.requires-dev]
-dev = [{ name = "ruff", specifier = ">=0.11.7" }]
 
 [[package]]
 name = "typed-argument-parser"

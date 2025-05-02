@@ -13,7 +13,7 @@ from torchgeo.datasets import (
 )
 from torchgeo.samplers import GridGeoSampler
 
-from trujillo_dataprocessing.vis import info_plots
+from slicksmith_ttom.vis import info_plots
 
 from .BalancedRandomGeoSampler import (
     BalancedRandomGeoSampler,
@@ -21,7 +21,7 @@ from .BalancedRandomGeoSampler import (
 )
 
 
-class TrujilloLabelDataset(RasterDataset):
+class TtomLabelDataset(RasterDataset):
     """
     Eg. filename 00000.tif
     """
@@ -32,7 +32,7 @@ class TrujilloLabelDataset(RasterDataset):
     is_image = False
 
 
-class TrujilloImageDataset(RasterDataset):
+class TtomImageDataset(RasterDataset):
     """
     Eg. filename 00000.tif
     """
@@ -43,9 +43,9 @@ class TrujilloImageDataset(RasterDataset):
     is_image = True
 
 
-class TrujilloDataModule(L.LightningDataModule):
+class TtomDataModule(L.LightningDataModule):
     """
-    Trujillo remote-sensing segmentation datamodule.
+    Ttom remote-sensing segmentation datamodule.
 
     The module builds three GeoDataset splits (train/val/test), optionally
     samples a user-defined number of patches per split, and exposes
@@ -118,7 +118,7 @@ class TrujilloDataModule(L.LightningDataModule):
         self.pos_ratio = pos_ratio
 
     def setup(self, stage="fit"):
-        train_dataset = self._load_trujillo_dataset(
+        train_dataset = self._load_ttom_dataset(
             self.train_img_path, self.train_lbl_path
         )
 
@@ -132,10 +132,10 @@ class TrujilloDataModule(L.LightningDataModule):
             ) = random_bbox_assignment(train_dataset, [0.7, 0.1, 0.2], generator)
         else:
             self.train_dataset = train_dataset
-            self.val_dataset = self._load_trujillo_dataset(
+            self.val_dataset = self._load_ttom_dataset(
                 self.val_img_path, self.val_lbl_path
             )
-            self.test_dataset = self._load_trujillo_dataset(
+            self.test_dataset = self._load_ttom_dataset(
                 self.test_img_path, self.test_lbl_path
             )
 
@@ -208,13 +208,13 @@ class TrujilloDataModule(L.LightningDataModule):
         )
 
     @staticmethod
-    def _load_trujillo_dataset(img_path, lbl_path):
+    def _load_ttom_dataset(img_path, lbl_path):
         return IntersectionDataset(
-            dataset1=TrujilloImageDataset(
+            dataset1=TtomImageDataset(
                 img_path,
                 transforms=image_transform,
             ),
-            dataset2=TrujilloLabelDataset(
+            dataset2=TtomLabelDataset(
                 lbl_path,
                 transforms=label_transform,
             ),
@@ -231,13 +231,13 @@ def label_transform(label):
 
 
 def save_examples(img_dir, lbl_dir, figures_dir: Path):
-    # src_dir = Path("/Users/hjo109/Documents/data/Trujillo")
+    # src_dir = Path("/Users/hjo109/Documents/data/Ttom")
     # img_dir = src_dir / "Oil_timestamped"
     # lbl_dir = src_dir / "Mask_oil_georef_timestamped"
 
     os.makedirs(figures_dir, exist_ok=True)
-    img_ds = TrujilloImageDataset(img_dir)
-    lbl_ds = TrujilloLabelDataset(lbl_dir)
+    img_ds = TtomImageDataset(img_dir)
+    lbl_ds = TtomLabelDataset(lbl_dir)
 
     ds = IntersectionDataset(
         dataset1=img_ds,
@@ -265,11 +265,11 @@ def save_examples(img_dir, lbl_dir, figures_dir: Path):
 
 
 if __name__ == "__main__":
-    img_path = Path("/Users/hjo109/Documents/data/Trujillo/Oil_timestamped")
-    lbl_path = Path("/Users/hjo109/Documents/data/Trujillo/Mask_oil_georef_timestamped")
+    img_path = Path("/Users/hjo109/Documents/data/Ttom/Oil_timestamped")
+    lbl_path = Path("/Users/hjo109/Documents/data/Ttom/Mask_oil_georef_timestamped")
 
     save_examples(
         img_path,
         lbl_path,
-        Path("/Users/hjo109/Documents/GitHub/trujillo-dataprocessing/output"),
+        Path("/Users/hjo109/Documents/GitHub/slicksmith-ttom/output"),
     )

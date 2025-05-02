@@ -8,16 +8,16 @@ from torch.utils.data import DataLoader
 from torchgeo.datasets import IntersectionDataset, concat_samples, stack_samples
 from torchgeo.samplers import GridGeoSampler
 
-from trujillo_dataprocessing.deep_learning import (
-    TrujilloImageDataset,
-    TrujilloLabelDataset,
+from slicksmith_ttom.deep_learning import (
+    TtomImageDataset,
+    TtomLabelDataset,
 )
-from trujillo_dataprocessing.download import download_file
-from trujillo_dataprocessing.preprocessing.add_georef_and_timestamps import (
+from slicksmith_ttom.download import download_file
+from slicksmith_ttom.preprocessing.add_georef_and_timestamps import (
     georeference_and_timestamp_images_and_masks,
 )
-from trujillo_dataprocessing.utils import save_console_outputs
-from trujillo_dataprocessing.vis import info_plots
+from slicksmith_ttom.utils import save_console_outputs
+from slicksmith_ttom.vis import info_plots
 
 ## Constants
 DATA_SOURCE_URLS = dict(
@@ -39,11 +39,11 @@ class MyArgs(Tap):
     make_info_plots: bool = True
 
     ## Paths
-    download_dst: Path = Path("/storage/experiments/data/Trujillo/")
+    download_dst: Path = Path("/storage/experiments/data/Ttom/")
     georef_and_timestamp_dst: Path = Path(
-        "/storage/experiments/data/Trujillo_torchgeo/"
+        "/storage/experiments/data/Ttom_torchgeo/"
     )
-    figures_dir: Path = Path("/storage/experiments/data/Trujillo_examples/")
+    figures_dir: Path = Path("/storage/experiments/data/Ttom_examples/")
 
     def process_args(self):
         self.examples_img_src = self.georef_and_timestamp_dst / "Oil_timestamped"
@@ -158,8 +158,8 @@ def save_examples_and_info_plots(
 ):
     os.makedirs(figures_dir, exist_ok=True)
 
-    img_ds = TrujilloImageDataset(img_dir)
-    lbl_ds = TrujilloLabelDataset(lbl_dir)
+    img_ds = TtomImageDataset(img_dir)
+    lbl_ds = TtomLabelDataset(lbl_dir)
 
     ds = IntersectionDataset(
         dataset1=img_ds,
