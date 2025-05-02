@@ -33,17 +33,17 @@ DATA_SOURCE_URLS = dict(
 
 ## Arguments Parser
 class MyArgs(Tap):
+    ## Paths
+    download_dst: Path #= Path("/storage/experiments/data/Ttom/")
+    georef_and_timestamp_dst: Path #= Path(
+    #     "/storage/experiments/data/Ttom_torchgeo/"
+    # )
+    figures_dir: Path #= Path("/storage/experiments/data/Ttom_examples/")
+    
     ## Tasks
     download: bool = True
     process_for_torchgeo: bool = True
     make_info_plots: bool = True
-
-    ## Paths
-    download_dst: Path = Path("/storage/experiments/data/Ttom/")
-    georef_and_timestamp_dst: Path = Path(
-        "/storage/experiments/data/Ttom_torchgeo/"
-    )
-    figures_dir: Path = Path("/storage/experiments/data/Ttom_examples/")
 
     def process_args(self):
         self.examples_img_src = self.georef_and_timestamp_dst / "Oil_timestamped"
