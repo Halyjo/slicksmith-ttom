@@ -34,12 +34,12 @@ DATA_SOURCE_URLS = dict(
 ## Arguments Parser
 class MyArgs(Tap):
     ## Paths
-    download_dst: Path #= Path("/storage/experiments/data/Ttom/")
-    georef_and_timestamp_dst: Path #= Path(
+    download_dst: Path  # = Path("/storage/experiments/data/Ttom/")
+    georef_and_timestamp_dst: Path  # = Path(
     #     "/storage/experiments/data/Ttom_torchgeo/"
     # )
-    figures_dir: Path #= Path("/storage/experiments/data/Ttom_examples/")
-    
+    figures_dir: Path  # = Path("/storage/experiments/data/Ttom_examples/")
+
     ## Tasks
     download: bool = True
     process_for_torchgeo: bool = True
@@ -54,7 +54,7 @@ class MyArgs(Tap):
 
 def main():
     """Does 3 things:
-    
+
     Main
     ----
     1. download data

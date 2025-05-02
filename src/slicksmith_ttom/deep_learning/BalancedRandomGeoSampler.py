@@ -15,7 +15,6 @@ from rasterio.vrt import WarpedVRT
 from torchgeo.datasets.utils import BoundingBox
 from torchgeo.samplers import RandomGeoSampler, get_random_bounding_box
 
-
 __all__ = [
     "BalancedRandomGeoSampler",
     "build_integral_mask",
