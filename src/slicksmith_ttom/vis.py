@@ -29,7 +29,7 @@ def _ensure_rgb_or_single(img: np.ndarray) -> np.ndarray:
         img = np.repeat(img, 3, axis=0)  # grayscale → RGB
     elif c == 2:
         img = np.concatenate(
-            [np.zeros((h, w)), img],
+            [np.zeros((1, h, w)), img],
             axis=0,
         )
     elif c > 3:
