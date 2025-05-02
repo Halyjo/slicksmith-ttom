@@ -28,7 +28,9 @@ uv run python -c "from slicksmith_ttom import main; main()" --process_for_torchg
 from slicksmith_ttom import (
     TtomDataModule, ## Lightning data module with methods train_dataloader(), etc. Uses custom BalancedRandomGeoSampler 
     TtomImageDataset, ## subclass of torchgeo.datasets.RasterDataset for images only
-    TtomLabelDataset, ## subclass of torchgeo.datasets.RasterDataset for labels only (used with IntersectionDataset in TtomDataModule)
+    TtomLabelDataset, ## subclass of torchgeo.datasets.RasterDataset for labels only (used with IntersectionDataset in TtomDataModule),
+    BalancedRandomGeoSampler,
+    build_integral_mask_from_raster_dataset, ## to make course lookup map for faster sampling.
 )
 from pathlib import Path
 from torch.utils.data import DataLoader
@@ -47,7 +49,24 @@ ds = IntersectionDataset(
     collate_fn=concat_samples,
 )
 
+## To go through the whole dataset of all images sequentially in a grid-pattern 
 samp = GridGeoSampler(ds, (512, 512), (512, 512))
+
+
+## Uncomment below to use the cooler sampler
+## integral_mask and integral_transform are optional in BalancedRandomGeoSampler. 
+## If not provided, takes less memory, but is much slower.
+
+# integral_mask, integral_transform = build_integral_mask_from_raster_dataset(
+#     lbl_ds
+# )
+# samp = BalancedRandomGeoSampler(
+#     ds, 
+#     size=256, 
+#     pos_ratio=0.5,
+#     integral_mask=integral_mask,
+#     integral_transform=integral_transform,
+# )
 
 dl = DataLoader(
     ds,
