@@ -176,7 +176,7 @@ def save_examples_and_info_plots(
     )
     samp = BalancedRandomGeoSampler(
         ds, 
-        256, 
+        size=256, 
         pos_ratio=0.5,
         integral_mask=integral_mask,
         integral_transform=integral_transform,
@@ -185,7 +185,7 @@ def save_examples_and_info_plots(
     dl = DataLoader(
         ds,
         sampler=samp,
-        batch_size=4,
+        batch_size=16,
         collate_fn=stack_samples,
     )
 
