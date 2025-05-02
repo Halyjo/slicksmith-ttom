@@ -2118,7 +2118,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "lightning", specifier = ">=2.5.1.post0" },
+    { name = "lightning", specifier = ">=2.4" },
     { name = "py7zr", specifier = ">=0.22.0" },
     { name = "rasterio", specifier = ">=1.4.3" },
     { name = "torch", specifier = ">=2.7.0" },

@@ -5,6 +5,7 @@ import random
 from pathlib import Path
 from typing import Iterator, Optional, Tuple
 from warnings import warn
+
 import rasterio
 import torch
 from affine import Affine
@@ -53,7 +54,7 @@ def build_integral_mask_from_raster_dataset(
     band: int = 1,
     resampling: Resampling = Resampling.nearest,
     to_device: Optional[torch.device | str] = "cpu",
-    res = 0.1, 
+    res=0.1,
 ) -> Tuple[torch.Tensor, Affine]:
     """Mosaic **label rasters** into a single integral image.
 
@@ -77,7 +78,7 @@ def build_integral_mask_from_raster_dataset(
     -------
     integral_mask : torch.Tensor
     integral_transform : Affine
-        
+
     Developed with ChatGPT.
     """
     files = _raster_files(label_ds)

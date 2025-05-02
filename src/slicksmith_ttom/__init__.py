@@ -1,8 +1,8 @@
 from .deep_learning.torchgeo_datasets import (
+    BalancedRandomGeoSampler,
     TtomDataModule,
     TtomImageDataset,
     TtomLabelDataset,
-    BalancedRandomGeoSampler,
     build_integral_mask_from_raster_dataset,
 )
 from .main import main

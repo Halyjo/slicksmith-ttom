@@ -6,12 +6,11 @@ import py7zr
 from tap import Tap
 from torch.utils.data import DataLoader
 from torchgeo.datasets import IntersectionDataset, concat_samples, stack_samples
-from torchgeo.samplers import GridGeoSampler
 
 from slicksmith_ttom.deep_learning import (
+    BalancedRandomGeoSampler,
     TtomImageDataset,
     TtomLabelDataset,
-    BalancedRandomGeoSampler,
     build_integral_mask_from_raster_dataset,
 )
 from slicksmith_ttom.download import download_file
@@ -36,15 +35,13 @@ DATA_SOURCE_URLS = dict(
 ## Arguments Parser
 class MyArgs(Tap):
     ## Paths
-    download_dst: Path  # = Path("/storage/experiments/data/Ttom/")
-    georef_and_timestamp_dst: Path  # = Path(
-    #     "/storage/experiments/data/Ttom_torchgeo/"
-    # )
-    figures_dir: Path  # = Path("/storage/experiments/data/Ttom_examples/")
+    download_dst: Path = Path("/storage/experiments/data/Ttom/")
+    georef_and_timestamp_dst: Path = Path("/Users/hjo109/Documents/data/Ttom/")
+    figures_dir: Path = Path("./output")
 
     ## Tasks
-    download: bool = True
-    process_for_torchgeo: bool = True
+    download: bool = False
+    process_for_torchgeo: bool = False
     make_info_plots: bool = True
 
     def process_args(self):
@@ -170,13 +167,11 @@ def save_examples_and_info_plots(
     )
 
     # samp = GridGeoSampler(ds, (512, 512), (512, 512))
-    
-    integral_mask, integral_transform = build_integral_mask_from_raster_dataset(
-        lbl_ds
-    )
+
+    integral_mask, integral_transform = build_integral_mask_from_raster_dataset(lbl_ds)
     samp = BalancedRandomGeoSampler(
-        ds, 
-        size=256, 
+        ds,
+        size=256,
         pos_ratio=0.5,
         integral_mask=integral_mask,
         integral_transform=integral_transform,
