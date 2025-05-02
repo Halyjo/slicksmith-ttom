@@ -8,7 +8,7 @@ This is code for processing and working with a a three part dataset that can be 
 - Trujillo-Acatitla, R., Tuxpan-Vargas, J., Ovando-Vázquez, C., & Monterrubio-Martínez, E. (2024). Sentinel-1 SAR Oil spill image dataset for train, validate, and test deep learning models. Part III (Version 2024) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.13761290
 
 
-## How to use
+## Getting started
 1. git clone <this-repo>
 2. `uv sync` inside repo root folder.
 3. For download, unzip and processing options, run:
