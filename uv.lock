@@ -2242,19 +2242,6 @@ wheels = [
 ]
 
 [[package]]
-name = "torchshow"
-version = "0.5.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "numpy" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/c9/43/91488b3addef178f3c9c89fae53a131139eac6ead3884df6cca9fcb90d6a/torchshow-0.5.2.tar.gz", hash = "sha256:130beb4883916686f4f51d577716a0fe8579ead203271f7a7f78c61e9af303cc", size = 21633 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b0/33/b6f2d7d5b2baa18dfc8b7b4323547ce959e8c7ef3d611361db856aac277f/torchshow-0.5.2-py3-none-any.whl", hash = "sha256:8ebc3d5ad71c8f61164f7dbb03da3dcba680fb6edb1d24f57dd5835131b1ffd2", size = 17342 },
-]
-
-[[package]]
 name = "torchvision"
 version = "0.22.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2318,7 +2305,6 @@ dependencies = [
     { name = "rasterio" },
     { name = "torch" },
     { name = "torchgeo" },
-    { name = "torchshow" },
     { name = "typed-argument-parser" },
 ]
 
@@ -2334,7 +2320,6 @@ requires-dist = [
     { name = "rasterio", specifier = ">=1.4.3" },
     { name = "torch", specifier = ">=2.7.0" },
     { name = "torchgeo", specifier = ">=0.7.0" },
-    { name = "torchshow", specifier = ">=0.5.2" },
     { name = "typed-argument-parser", specifier = ">=1.10.1" },
 ]
 
