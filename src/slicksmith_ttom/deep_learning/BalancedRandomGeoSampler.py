@@ -71,6 +71,11 @@ def build_integral_mask_from_raster_dataset(
     to_device : torch.device | str | None, default "cpu"
         Device for the returned tensor.
 
+    Returns
+    -------
+    integral_mask : torch.Tensor
+    integral_transform : Affine
+        
     Developed with ChatGPT.
     """
     files = _raster_files(label_ds)
