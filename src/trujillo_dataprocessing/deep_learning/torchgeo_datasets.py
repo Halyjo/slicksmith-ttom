@@ -1,18 +1,20 @@
+import os
 from pathlib import Path
 
+import lightning as L
+import torch
 from torch.utils.data import DataLoader
 from torchgeo.datasets import (
     IntersectionDataset,
     RasterDataset,
     concat_samples,
-    stack_samples,
     random_bbox_assignment,
+    stack_samples,
 )
 from torchgeo.samplers import GridGeoSampler
-from torchshow import torchshow as ts
-import lightning as L
-import os
-import torch
+
+from trujillo_dataprocessing.vis import info_plots
+
 from .BalancedRandomGeoSampler import (
     BalancedRandomGeoSampler,
     build_integral_mask_from_raster_dataset,
@@ -243,7 +245,7 @@ def save_examples(img_dir, lbl_dir, figures_dir: Path):
         collate_fn=concat_samples,
     )
 
-    samp = GridGeoSampler(ds, (480, 480), (480, 480))
+    samp = GridGeoSampler(ds, (512, 512), (512, 512))
 
     dl = DataLoader(
         ds,
@@ -257,7 +259,17 @@ def save_examples(img_dir, lbl_dir, figures_dir: Path):
         mask = sample["mask"]
         print(f"{img.shape=}")
         print(f"{mask.shape=}")
-        assert img.sh
-        ts.save(img, figures_dir / f"example_{i:04d}_img.jpg")
-        ts.save(mask, figures_dir / f"example_{i:04d}_lbl.jpg")
-        break
+        info_plots(img, mask, figures_dir / str(i))
+        if i > 10:
+            break
+
+
+if __name__ == "__main__":
+    img_path = Path("/Users/hjo109/Documents/data/Trujillo/Oil_timestamped")
+    lbl_path = Path("/Users/hjo109/Documents/data/Trujillo/Mask_oil_georef_timestamped")
+
+    save_examples(
+        img_path,
+        lbl_path,
+        Path("/Users/hjo109/Documents/GitHub/trujillo-dataprocessing/output"),
+    )

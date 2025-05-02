@@ -118,7 +118,8 @@ def build_integral_mask_from_raster_dataset(
 
 
 class BalancedRandomGeoSampler(RandomGeoSampler):
-    """RandomGeoSampler that yields a user‑specified ratio of positive to negative tiles.
+    """RandomGeoSampler that yields a user‑specified
+    ratio of positive to negative tiles.
 
     Parameters
     ----------
@@ -181,7 +182,8 @@ class BalancedRandomGeoSampler(RandomGeoSampler):
             self._origin_x = c
             self._origin_y = f
 
-        ## Store dataset itself in the sampler to check for oil occurance if integral mask is not given.
+        ## Store dataset itself in the sampler to check
+        ## for oil occurance if integral mask is not given.
         if integral_mask is None:
             self.dataset = dataset
 
@@ -219,7 +221,8 @@ class BalancedRandomGeoSampler(RandomGeoSampler):
             if is_pos(bbox) == want_pos:
                 return bbox  # ¯\\_(ツ)_/¯  finally
         warn(
-            f"Tried {max_iter} random boxes without finding a positive patch so returned a negative one.",
+            f"Tried {max_iter} random boxes without finding "
+            "a positive patch so returned a negative one.",
             stacklevel=2,
         )
         return bbox
