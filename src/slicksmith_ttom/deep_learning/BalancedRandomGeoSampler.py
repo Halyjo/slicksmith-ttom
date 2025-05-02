@@ -5,7 +5,6 @@ import random
 from pathlib import Path
 from typing import Iterator, Optional, Tuple
 from warnings import warn
-
 import rasterio
 import torch
 from affine import Affine
@@ -54,6 +53,7 @@ def build_integral_mask_from_raster_dataset(
     band: int = 1,
     resampling: Resampling = Resampling.nearest,
     to_device: Optional[torch.device | str] = "cpu",
+    res = 0.1, 
 ) -> Tuple[torch.Tensor, Affine]:
     """Mosaic **label rasters** into a single integral image.
 
@@ -70,6 +70,8 @@ def build_integral_mask_from_raster_dataset(
         Resampling method used by ``WarpedVRT``.
     to_device : torch.device | str | None, default "cpu"
         Device for the returned tensor.
+    res : tuple | int, default 0.1
+        Output resolution in units of coordinate reference system. If not set, a source resolution will be used. If a single value is passed, output pixels will be square.
 
     Returns
     -------
@@ -103,18 +105,14 @@ def build_integral_mask_from_raster_dataset(
             src = WarpedVRT(src, crs=target_crs, resampling=resampling)
         srcs.append(src)
 
-    mosaic, out_transform = rio_merge(srcs, nodata=0)
-
+    mosaic, out_transform = rio_merge(srcs, res=0.1, nodata=0)
     # Cleanup (close datasets & VRTs)
     for s in srcs:
         with contextlib.suppress(Exception):
             s.close()
-
     mask_np = (mosaic[band - 1] != 0).astype("int32")
 
-    ## Binerize like the original image
-    relevant_classes_mask_np = (mask_np < 6) & (mask_np > 1)
-    mask = torch.from_numpy(relevant_classes_mask_np)
+    mask = torch.from_numpy(mask_np)
     if to_device is not None:
         mask = mask.to(to_device)
     return build_integral_mask(mask), out_transform

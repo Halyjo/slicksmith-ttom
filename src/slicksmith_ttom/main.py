@@ -11,6 +11,8 @@ from torchgeo.samplers import GridGeoSampler
 from slicksmith_ttom.deep_learning import (
     TtomImageDataset,
     TtomLabelDataset,
+    BalancedRandomGeoSampler,
+    build_integral_mask_from_raster_dataset,
 )
 from slicksmith_ttom.download import download_file
 from slicksmith_ttom.preprocessing.add_georef_and_timestamps import (
@@ -167,12 +169,23 @@ def save_examples_and_info_plots(
         collate_fn=concat_samples,
     )
 
-    samp = GridGeoSampler(ds, (512, 512), (512, 512))
+    # samp = GridGeoSampler(ds, (512, 512), (512, 512))
+    
+    integral_mask, integral_transform = build_integral_mask_from_raster_dataset(
+        lbl_ds
+    )
+    samp = BalancedRandomGeoSampler(
+        ds, 
+        256, 
+        pos_ratio=0.5,
+        integral_mask=integral_mask,
+        integral_transform=integral_transform,
+    )
 
     dl = DataLoader(
         ds,
         sampler=samp,
-        batch_size=16,
+        batch_size=4,
         collate_fn=stack_samples,
     )
 
