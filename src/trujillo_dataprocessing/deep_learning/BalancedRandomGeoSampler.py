@@ -12,7 +12,6 @@ from affine import Affine
 from rasterio.enums import Resampling
 from rasterio.merge import merge as rio_merge
 from rasterio.vrt import WarpedVRT
-from timeit_decorator import timeit
 from torchgeo.datasets.utils import BoundingBox
 from torchgeo.samplers import RandomGeoSampler, get_random_bounding_box
 
@@ -48,7 +47,7 @@ def _raster_files(ds):
         return files
 
 
-@timeit(runs=1, detailed=True)
+# @timeit(runs=1, detailed=True)
 def build_integral_mask_from_raster_dataset(
     label_ds,
     *,
