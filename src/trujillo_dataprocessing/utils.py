@@ -1,6 +1,6 @@
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
 
 
 class ConsoleOutputSaver:
@@ -24,7 +24,7 @@ class ConsoleOutputSaver:
         return False
 
 
-def save_outputs(path: os.PathLike = "outputs.log"):
+def save_console_outputs(path: os.PathLike = "outputs.log"):
     """Make sure to save all stdout and stderr to file in addition to printing.
 
     :param path: path to log to save outputs in.

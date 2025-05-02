@@ -1,8 +1,10 @@
 import os
 from pathlib import Path
-import requests
+
 import py7zr
-from utils import save_outputs
+import requests
+
+from trujillo_dataprocessing.utils import save_console_outputs
 
 
 def download_file(url, dst_dir, filename=None, chunk_size=8192):
@@ -36,7 +38,7 @@ if __name__ == "__main__":
 
     dst = Path("/storage/experiments/data/Trujillo/")
 
-    save_outputs(dst / "outputs.log")
+    save_console_outputs(dst / "outputs.log")
 
     for name, src in download_urls.items():
         dst_dir = dst / name
