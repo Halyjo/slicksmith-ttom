@@ -11,12 +11,58 @@ This is code for processing and working with a a three part dataset that can be 
 ## How to use
 1. git clone <this-repo>
 2. `uv sync` inside repo root folder.
-3.
+3. For download, unzip and processing options, run:
 
+```bash
+uv run python -c "from slicksmith_ttom import main; main()" --help
+```
+Remove the `--help`-flag when you are ready to run things. You will need to specify the path to the destination folder for the download (download_dst), the destination folder for the torchgeo friendly processed data (georef_and_timestamped_dst) and a folder for the info plots and figures to go (figures_dir). There are optional flags to opt out of any of the three steps as well. 
+
+**eg. if you only want to download and unzip, run:**
+```bash
+uv run python -c "from slicksmith_ttom import main; main()" --process_for_torchgeo=0 --make_info_plots=0
+```
+
+4. Assuming you have the processed date, the following components are good starting points to work with the data:
 ```python
-from slicksmith_ttom import main
+from slicksmith_ttom import (
+    TtomDataModule, ## Lightning data module with methods train_dataloader(), etc. Uses custom BalancedRandomGeoSampler 
+    TtomImageDataset, ## subclass of torchgeo.datasets.RasterDataset for images only
+    TtomLabelDataset, ## subclass of torchgeo.datasets.RasterDataset for labels only (used with IntersectionDataset in TtomDataModule)
+)
+from pathlib import Path
+from torch.utils.data import DataLoader
+from torchgeo.datasets import IntersectionDataset, concat_samples, stack_samples
+from torchgeo.samplers import GridGeoSampler
 
-main()
+img_data_path = Path("<your-data-root-path>/Oil_timestamped")
+lbl_data_path = Path("<your-data-root-path>/Mask_oil_georef_timestamped")
+
+img_ds = TtomImageDataset(img_dir)
+lbl_ds = TtomLabelDataset(lbl_dir)
+
+ds = IntersectionDataset(
+    dataset1=img_ds,
+    dataset2=lbl_ds,
+    collate_fn=concat_samples,
+)
+
+samp = GridGeoSampler(ds, (512, 512), (512, 512))
+
+dl = DataLoader(
+    ds,
+    sampler=samp,
+    batch_size=16,
+    collate_fn=stack_samples,
+)
+
+for i, sample in enumerate(dl):
+    img = sample["image"]
+    mask = sample["mask"]
+    print(img.shape)
+    print(mask.shape)
+    break
+
 ```
 
 
