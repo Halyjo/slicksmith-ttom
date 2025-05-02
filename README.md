@@ -70,4 +70,4 @@ for i, sample in enumerate(dl):
 slicksmith-ttom: "slick": oil spill slicks, "smith": tools, "ttom": dataset author names' first characters
 
 ## References
-My overleaf doc: https://www.overleaf.com/project/6812010057715ba1a6d19142
+Private overleaf doc with some details for me to remember: https://www.overleaf.com/project/6812010057715ba1a6d19142
