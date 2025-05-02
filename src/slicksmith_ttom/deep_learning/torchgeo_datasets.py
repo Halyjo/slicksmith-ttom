@@ -1,9 +1,9 @@
 import os
 from pathlib import Path
 
-import lightning as L
 import torch
 from torch.utils.data import DataLoader
+from torchgeo.datamodules import GeoDataModule
 from torchgeo.datasets import (
     IntersectionDataset,
     RasterDataset,
@@ -43,7 +43,7 @@ class TtomImageDataset(RasterDataset):
     is_image = True
 
 
-class TtomDataModule(L.LightningDataModule):
+class TtomDataModule(GeoDataModule):
     """
     Ttom remote-sensing segmentation datamodule.
 
