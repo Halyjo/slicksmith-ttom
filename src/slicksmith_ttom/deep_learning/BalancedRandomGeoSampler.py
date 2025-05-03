@@ -72,7 +72,9 @@ def build_integral_mask_from_raster_dataset(
     to_device : torch.device | str | None, default "cpu"
         Device for the returned tensor.
     res : tuple | int, default 0.1
-        Output resolution in units of coordinate reference system. If not set, a source resolution will be used. If a single value is passed, output pixels will be square.
+        Output resolution in units of coordinate reference system.
+        If not set, a source resolution will be used.
+        If a single value is passed, output pixels will be square.
 
     Returns
     -------

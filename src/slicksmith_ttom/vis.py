@@ -47,18 +47,24 @@ def info_plots(x: torch.Tensor, y: torch.Tensor, path: os.PathLike) -> List[Path
 
     The following assets are written to *path*:
 
-    1. **image_grid_vv.png, image_grid_vh.png** – square-ish grid of *x* images with a shared colorbar.
-    2. **mask_grid.png** – grid of segmentation masks with a discrete colorbar.
-    3. **overlay_grid.png** – image / mask overlaps (RGB + 40 % alpha mask).
-    4. **histograms_linear_vv.png, histograms_linear_vh.png** – per‑image intensity histograms (linear *y*).
-    5. **histograms_log_vv.png, histograms_log_vh.png** – same histograms with logarithmic *y* scale.
+    1. **image_grid_vv.png, image_grid_vh.png** – square-ish
+        grid of *x* images with a shared colorbar.
+    2. **mask_grid.png** – grid of segmentation masks with a
+        discrete colorbar.
+    3. **overlay_grid.png** – image / mask overlaps
+        (RGB + 40 % alpha mask).
+    4. **histograms_linear_vv.png, histograms_linear_vh.png**
+        – per‑image intensity histograms (linear *y*).
+    5. **histograms_log_vv.png, histograms_log_vh.png**
+        – same histograms with logarithmic *y* scale.
 
     Parameters
     ----------
     x : torch.Tensor
         Image tensor shaped *(B, C, H, W)*.
     y : torch.Tensor
-        Corresponding segmentation masks shaped *(B, H, W)* or *(B, 1, H, W)*.
+        Corresponding segmentation masks shaped
+            *(B, H, W)* or *(B, 1, H, W)*.
     path : os.PathLike
         Output directory (will be created).
     """
@@ -149,7 +155,12 @@ def info_plots(x: torch.Tensor, y: torch.Tensor, path: os.PathLike) -> List[Path
     last_im = None
     for idx, ax in enumerate(axes):
         if idx < b:
-            last_im = ax.imshow(y_np[idx], cmap=cmap, vmin=0, vmax=n_classes - 1)
+            last_im = ax.imshow(
+                y_np[idx],
+                cmap=cmap,
+                vmin=0,
+                vmax=n_classes - 1,
+            )
             ax.set_xticks([])
             ax.set_yticks([])
         else:
@@ -176,7 +187,13 @@ def info_plots(x: torch.Tensor, y: torch.Tensor, path: os.PathLike) -> List[Path
     for idx, ax in enumerate(axes):
         if idx < b:
             ax.imshow(_ensure_rgb_or_single(x_np[idx]), cmap="gray")
-            ax.imshow(y_np[idx], cmap=cmap, alpha=0.5, vmin=0, vmax=n_classes - 1)
+            ax.imshow(
+                y_np[idx],
+                cmap=cmap,
+                alpha=0.5,
+                vmin=0,
+                vmax=n_classes - 1,
+            )
             ax.set_xticks([])
             ax.set_yticks([])
         else:
@@ -190,7 +207,11 @@ def info_plots(x: torch.Tensor, y: torch.Tensor, path: os.PathLike) -> List[Path
     # ------------------------------------------------------------------
     # 4. Histograms (linear & log) -------------------------------------
     # ------------------------------------------------------------------
-    def _histograms(img_band_batch, band_name: str, log: bool = False) -> Path:
+    def _histograms(
+        img_band_batch,
+        band_name: str,
+        log: bool = False,
+    ) -> Path:
         fig, axes = plt.subplots(
             side,
             side,
