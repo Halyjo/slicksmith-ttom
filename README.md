@@ -39,16 +39,23 @@ options:
   --make_info_plots     (bool, default=True)
   -h, --help            show this help message and exit
 ```
-- [DOWNLOAD_DST]: Path to the directory to download and unzip the files to.
-- [GEOREF_AND_TIMESTAMP_DST]: The image files are georeferenced, but not the labels. 
-    If processing for `torchgeo`, all matching image-label pairs will be opened
+The options you need to think about first are what to do:
+- `--download`, `--process_for_torchgeo` and `--make_info_plots` are flags for what to do. Set all to `1` if you want to do everything.
 
-Remove the `--help`-flag when you are ready to run things. You will need to specify the path to the destination folder for the download (download_dst), the destination folder for the torchgeo friendly processed data (georef_and_timestamped_dst) and a folder for the info plots and figures to go (figures_dir). There are optional flags to opt out of any of the three steps as well. 
+- `--download_dst`: Path to the directory to download and unzip the files to.
+- `--georef_and_timestamp_dst`: Where to store the torchgeo processed files (see [processing-for-torchgeo](#processing-for-torchgeo) for more info).
+- `--make_info_plots`: When the preparation is done, it's often useful to get a better understanding of the intensity distribution and see a few examples from the dataset. If this is set to `1`, a few plots are stored in the `--figures_dir`: 
+1. Image grids: A set of sampled images in a resolution of (480, 480) are shown. VV and VH channels are shown separately.
+2. Mask grids corresponding to the Image grids. 
+3. Histograms corresponding to the image files. Plots for the VV and the VH channels are shown separately and there are separate plots for linear and logarithmic y-scale.
+
+
+Remove the `--help`-flag when you are ready to run things. You will need to specify the path to the destination folder for the download (download_dst), the destination folder for the torchgeo friendly processed data (georef_and_timestamped_dst) and a folder for the info plots and figures to go (figures_dir). There are optional flags to opt out of any of the three steps as well.
 
 
 **eg. if you only want to download and unzip, run:**
 ```bash
-uv run python -c "from slicksmith_ttom import main; main()" --process_for_torchgeo=0 --make_info_plots=0
+uv run python -c "from slicksmith_ttom import main; main()" --download=1 --process_for_torchgeo=0 --make_info_plots=0
 ```
 
 4. Assuming you have the processed date, the following components are good starting points to work with the data:
@@ -131,3 +138,7 @@ slicksmith-ttom: "slick": oil spill slicks, "smith": tools, "ttom": dataset auth
 ## References
 
 Private overleaf doc with some details for me to remember: https://www.overleaf.com/project/6812010057715ba1a6d19142
+
+
+## About the data
+
