@@ -14,6 +14,7 @@ from rasterio.merge import merge as rio_merge
 from rasterio.vrt import WarpedVRT
 from torchgeo.datasets.utils import BoundingBox
 from torchgeo.samplers import RandomGeoSampler, get_random_bounding_box
+from utils import compute_res_for_shape
 
 __all__ = [
     "BalancedRandomGeoSampler",
@@ -107,17 +108,25 @@ def build_integral_mask_from_raster_dataset(
         if src.crs != target_crs:
             src = WarpedVRT(src, crs=target_crs, resampling=resampling)
         srcs.append(src)
+    
+    target_mosaic_shape = (512, 512)
+    res, bounds = compute_res_for_shape(srcs, target_mosaic_shape)
+    mosaic, out_transform = rio_merge(srcs, bounds=bounds, res=res, nodata=0, target_aligned_pixels=True)
+    
+    assert abs(mosaic.shape[0] - target_mosaic_shape[0]) <= 5, "res in rio_merge produces the wrong mask shape"
+    assert abs(mosaic.shape[1] - target_mosaic_shape[1]) <= 5, "res in rio_merge produces the wrong mask shape"
 
-    mosaic, out_transform = rio_merge(srcs, res=0.1, nodata=0)
     # Cleanup (close datasets & VRTs)
     for s in srcs:
         with contextlib.suppress(Exception):
             s.close()
-    mask_np = (mosaic[band - 1] != 0).astype("int32")
+    mask = (mosaic[band - 1] != 0).astype("int32")
 
-    mask = torch.from_numpy(mask_np)
+
+    mask = torch.from_numpy(mask)
     if to_device is not None:
         mask = mask.to(to_device)
+
     return build_integral_mask(mask), out_transform
 
 
