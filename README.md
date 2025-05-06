@@ -42,7 +42,7 @@ options:
 - `--download_dst`: Path to the directory to download and unzip the files to.
 - `--georef_and_timestamp_dst`: Where to store the torchgeo processed files (see [processing-for-torchgeo](#processing-for-torchgeo) for more info).
 - `--make_info_plots`: When the preparation is done, it's often useful to get a better understanding of the intensity distribution and see a few examples from the dataset. If this is set to `1`, the following are generated for a small set of images `--figures_dir`:
-    1. Image grids: A set of sampled images in a resolution of (480, 480) are shown. VV and VH channels are shown separately.
+    1. Image grids: A set of sampled images in a resolution of (256, 256) are shown. VV and VH channels are shown separately.
     2. Mask grids corresponding to the Image grids. 
     3. Histograms corresponding to the image files. Plots for the VV and the VH channels are shown separately and there are separate plots for linear and logarithmic y-scale.
 
