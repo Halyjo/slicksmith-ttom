@@ -225,7 +225,6 @@ class BalancedRandomGeoSampler(RandomGeoSampler):
         res = self.res
 
         for _ in range(max_iter):
-            # print(",", end="")
             idx = torch.multinomial(areas, 1)
             hit = hits[idx]
             bbox = get_random_bounding_box(BoundingBox(*hit.bounds), size, res)
