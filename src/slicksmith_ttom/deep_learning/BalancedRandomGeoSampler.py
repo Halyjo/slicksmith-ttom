@@ -14,7 +14,7 @@ from rasterio.merge import merge as rio_merge
 from rasterio.vrt import WarpedVRT
 from torchgeo.datasets.utils import BoundingBox
 from torchgeo.samplers import RandomGeoSampler, get_random_bounding_box
-from utils import compute_res_for_shape
+from .utils import compute_res_for_shape
 
 __all__ = [
     "BalancedRandomGeoSampler",
@@ -55,7 +55,6 @@ def build_integral_mask_from_raster_dataset(
     band: int = 1,
     resampling: Resampling = Resampling.nearest,
     to_device: Optional[torch.device | str] = "cpu",
-    res=0.1,
 ) -> Tuple[torch.Tensor, Affine]:
     """Mosaic **label rasters** into a single integral image.
 
@@ -72,10 +71,6 @@ def build_integral_mask_from_raster_dataset(
         Resampling method used by ``WarpedVRT``.
     to_device : torch.device | str | None, default "cpu"
         Device for the returned tensor.
-    res : tuple | int, default 0.1
-        Output resolution in units of coordinate reference system.
-        If not set, a source resolution will be used.
-        If a single value is passed, output pixels will be square.
 
     Returns
     -------
@@ -112,20 +107,20 @@ def build_integral_mask_from_raster_dataset(
     target_mosaic_shape = (512, 512)
     res, bounds = compute_res_for_shape(srcs, target_mosaic_shape)
     mosaic, out_transform = rio_merge(srcs, bounds=bounds, res=res, nodata=0, target_aligned_pixels=True)
-    
-    assert abs(mosaic.shape[0] - target_mosaic_shape[0]) <= 5, "res in rio_merge produces the wrong mask shape"
-    assert abs(mosaic.shape[1] - target_mosaic_shape[1]) <= 5, "res in rio_merge produces the wrong mask shape"
 
     # Cleanup (close datasets & VRTs)
     for s in srcs:
         with contextlib.suppress(Exception):
             s.close()
-    mask = (mosaic[band - 1] != 0).astype("int32")
 
+    mask = (mosaic[band - 1] != 0).astype("int32")
 
     mask = torch.from_numpy(mask)
     if to_device is not None:
         mask = mask.to(to_device)
+        
+    assert abs(mosaic.shape[0] - target_mosaic_shape[0]) <= 2, "res in rio_merge produces the wrong mask shape"
+    assert abs(mosaic.shape[1] - target_mosaic_shape[1]) <= 2, "res in rio_merge produces the wrong mask shape"
 
     return build_integral_mask(mask), out_transform
 
