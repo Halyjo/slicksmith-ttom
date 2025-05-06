@@ -34,15 +34,18 @@ DATA_SOURCE_URLS = dict(
 
 ## Arguments Parser
 class MyArgs(Tap):
-    ## Paths
-    download_dst: Path = Path("/storage/experiments/data/Ttom/")
-    georef_and_timestamp_dst: Path = Path("/Users/hjo109/Documents/data/Ttom/")
-    figures_dir: Path = Path("./output")
-
     ## Tasks
-    download: bool = False
+    download: bool = True
     process_for_torchgeo: bool = False
-    make_info_plots: bool = True
+    make_info_plots: bool = False
+
+    ## Paths
+    # = Path("/storage/experiments/data/Ttom/")
+    download_dst: Path
+    # = Path("/Users/hjo109/Documents/data/Ttom/")
+    georef_and_timestamp_dst: Path
+    figures_dir: Path = Path("./figures")
+
 
     def process_args(self):
         self.examples_img_src = self.georef_and_timestamp_dst / "Oil_timestamped"
@@ -62,14 +65,6 @@ def main():
         - add artificial timestamps to both imgs and lbls
     3. make info plots to better understand the data
 
-    Use this with typed-argument-parser.
-
-    Example
-    -------
-    Use the CLI for easiest use. Run the following to see options.
-    ```
-    python main.py --help
-    ```
     """
     args = MyArgs().parse_args()
     save_console_outputs("console_outputs.log")
