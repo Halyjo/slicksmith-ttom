@@ -113,14 +113,17 @@ def build_integral_mask_from_raster_dataset(
         with contextlib.suppress(Exception):
             s.close()
 
+    # if mosaic.ndim > 2:
     mask = (mosaic[band - 1] != 0).astype("int32")
+    # else:
+    #     mask = mosaic.astype("int32")
 
     mask = torch.from_numpy(mask)
     if to_device is not None:
         mask = mask.to(to_device)
         
-    assert abs(mosaic.shape[0] - target_mosaic_shape[0]) <= 2, "res in rio_merge produces the wrong mask shape"
-    assert abs(mosaic.shape[1] - target_mosaic_shape[1]) <= 2, "res in rio_merge produces the wrong mask shape"
+    assert abs(mask.shape[0] - target_mosaic_shape[0]) <= 2, "res in rio_merge produces the wrong mask shape"
+    assert abs(mask.shape[1] - target_mosaic_shape[1]) <= 2, "res in rio_merge produces the wrong mask shape"
 
     return build_integral_mask(mask), out_transform
 
@@ -222,7 +225,7 @@ class BalancedRandomGeoSampler(RandomGeoSampler):
         res = self.res
 
         for _ in range(max_iter):
-            print(",", end="")
+            # print(",", end="")
             idx = torch.multinomial(areas, 1)
             hit = hits[idx]
             bbox = get_random_bounding_box(BoundingBox(*hit.bounds), size, res)
