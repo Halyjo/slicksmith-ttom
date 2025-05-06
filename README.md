@@ -1,4 +1,9 @@
 # slicksmith-ttom
+
+```{warning}
+This repo is under development and probably very buggy. If there are problems, please raise issues or just fire off PRs.
+```
+
 Processing tools for Sentinel-1 SAR Oil spill image dataset for train, validate, and test deep learning models.
 
 This is code for processing and working with a a three part dataset that can be found here:
@@ -16,7 +21,30 @@ This is code for processing and working with a a three part dataset that can be 
 ```bash
 uv run python -c "from slicksmith_ttom import main; main()" --help
 ```
+Which should return something similar to:
+```
+usage: -c [--download_dst DOWNLOAD_DST] [--georef_and_timestamp_dst GEOREF_AND_TIMESTAMP_DST] [--figures_dir FIGURES_DIR] [--download]
+          [--process_for_torchgeo] [--make_info_plots] [-h]
+
+options:
+  --download_dst DOWNLOAD_DST
+                        (Path, default=/storage/experiments/data/Ttom)
+  --georef_and_timestamp_dst GEOREF_AND_TIMESTAMP_DST
+                        (Path, default=/Users/hjo109/Documents/data/Ttom)
+  --figures_dir FIGURES_DIR
+                        (Path, default=output)
+  --download            (bool, default=False)
+  --process_for_torchgeo
+                        (bool, default=False)
+  --make_info_plots     (bool, default=True)
+  -h, --help            show this help message and exit
+```
+- [DOWNLOAD_DST]: Path to the directory to download and unzip the files to.
+- [GEOREF_AND_TIMESTAMP_DST]: The image files are georeferenced, but not the labels. 
+    If processing for `torchgeo`, all matching image-label pairs will be opened
+
 Remove the `--help`-flag when you are ready to run things. You will need to specify the path to the destination folder for the download (download_dst), the destination folder for the torchgeo friendly processed data (georef_and_timestamped_dst) and a folder for the info plots and figures to go (figures_dir). There are optional flags to opt out of any of the three steps as well. 
+
 
 **eg. if you only want to download and unzip, run:**
 ```bash
@@ -84,9 +112,22 @@ for i, sample in enumerate(dl):
 
 ```
 
+## Processing for `TorchGeo` 
+
+There are two things that need to be fixed to use this dataset with `Torchgeo`. (see. `src/slicksmith_ttom/preprocessing/add_georef_and_timestamps.py` for the implementation).
+
+### 1. Timestamps
+
+To use the TorchGeo framework effectively, our approach is to subclass `torchgeo.datasets.RasterDataset` with some reasonable class attributes and implement a sampler on top of it (see. `src/slicksmith_ttom/deep_learning/torchgeo_datasets.py`). However, to do this we need timestamps in file names that can be read given an appropriate `filename_regex` to avoid that images that overlap in space but not in time are mapped on top of each other.
+I do not know the real timestamps so I just add a pseudo timestamp making sure the image and label timestamps match. 
+
+### 2. Georeferencing Labels
+
+To use `torchgeo.datasets.IntersectionDataset` to match images and labels (see. `src/slicksmith_ttom/deep_learning/torchgeo_datasets.py`) we need the label-tif-files to include georeference information so we copy a new set of labels in a neighboring folder with the georef info added. 
 
 **The name:**
 slicksmith-ttom: "slick": oil spill slicks, "smith": tools, "ttom": dataset author names' first characters
 
 ## References
+
 Private overleaf doc with some details for me to remember: https://www.overleaf.com/project/6812010057715ba1a6d19142
