@@ -16,47 +16,42 @@ This is code for processing and working with a a three part dataset that can be 
 ## Getting started
 1. git clone <this-repo>
 2. `uv sync` inside repo root folder.
-3. For download, unzip and processing options, run:
+3. See options by running:
 
 ```bash
-uv run python -c "from slicksmith_ttom import main; main()" --help
-```
-Which should return something similar to:
-```
-usage: -c [--download_dst DOWNLOAD_DST] [--georef_and_timestamp_dst GEOREF_AND_TIMESTAMP_DST] [--figures_dir FIGURES_DIR] [--download]
-          [--process_for_torchgeo] [--make_info_plots] [-h]
+❯ uv run src/slicksmith_ttom/main.py --help
+usage: main.py [--download] [--process_for_torchgeo] [--make_info_plots] --download_dst DOWNLOAD_DST --georef_and_timestamp_dst GEOREF_AND_TIMESTAMP_DST
+               [--figures_dir FIGURES_DIR] [-h]
 
 options:
-  --download_dst DOWNLOAD_DST
-                        (Path, default=/storage/experiments/data/Ttom)
-  --georef_and_timestamp_dst GEOREF_AND_TIMESTAMP_DST
-                        (Path, default=/Users/hjo109/Documents/data/Ttom)
-  --figures_dir FIGURES_DIR
-                        (Path, default=output)
-  --download            (bool, default=False)
+  --download            (bool, default=True)
   --process_for_torchgeo
                         (bool, default=False)
-  --make_info_plots     (bool, default=True)
+  --make_info_plots     (bool, default=False)
+  --download_dst DOWNLOAD_DST
+                        (Path, required)
+  --georef_and_timestamp_dst GEOREF_AND_TIMESTAMP_DST
+                        (Path, required)
+  --figures_dir FIGURES_DIR
+                        (Path, default=figures)
   -h, --help            show this help message and exit
 ```
-The options you need to think about first are what to do:
+
 - `--download`, `--process_for_torchgeo` and `--make_info_plots` are flags for what to do. Set all to `1` if you want to do everything.
 
 - `--download_dst`: Path to the directory to download and unzip the files to.
 - `--georef_and_timestamp_dst`: Where to store the torchgeo processed files (see [processing-for-torchgeo](#processing-for-torchgeo) for more info).
-- `--make_info_plots`: When the preparation is done, it's often useful to get a better understanding of the intensity distribution and see a few examples from the dataset. If this is set to `1`, a few plots are stored in the `--figures_dir`: 
-1. Image grids: A set of sampled images in a resolution of (480, 480) are shown. VV and VH channels are shown separately.
-2. Mask grids corresponding to the Image grids. 
-3. Histograms corresponding to the image files. Plots for the VV and the VH channels are shown separately and there are separate plots for linear and logarithmic y-scale.
+- `--make_info_plots`: When the preparation is done, it's often useful to get a better understanding of the intensity distribution and see a few examples from the dataset. If this is set to `1`, the following are generated for a small set of images `--figures_dir`:
+    1. Image grids: A set of sampled images in a resolution of (480, 480) are shown. VV and VH channels are shown separately.
+    2. Mask grids corresponding to the Image grids. 
+    3. Histograms corresponding to the image files. Plots for the VV and the VH channels are shown separately and there are separate plots for linear and logarithmic y-scale.
 
 
-Remove the `--help`-flag when you are ready to run things. You will need to specify the path to the destination folder for the download (download_dst), the destination folder for the torchgeo friendly processed data (georef_and_timestamped_dst) and a folder for the info plots and figures to go (figures_dir). There are optional flags to opt out of any of the three steps as well.
-
-
-**eg. if you only want to download and unzip, run:**
+### To only download (default), run:
 ```bash
-uv run python -c "from slicksmith_ttom import main; main()" --download=1 --process_for_torchgeo=0 --make_info_plots=0
+uv run src/slicksmith_ttom/main.py --download_dst=<your-destination-data-path>
 ```
+
 
 4. Assuming you have the processed date, the following components are good starting points to work with the data:
 ```python
@@ -85,12 +80,11 @@ ds = IntersectionDataset(
 )
 
 ## To go through the whole dataset of all images sequentially in a grid-pattern 
-samp = GridGeoSampler(ds, (512, 512), (512, 512))
-
+samp = GridGeoSampler(ds, (480, 480), (480, 480))
 
 ## Uncomment below to use the cooler sampler
 ## integral_mask and integral_transform are optional in BalancedRandomGeoSampler. 
-## If not provided, takes less memory, but is much slower.
+## If not provided, takes less memory and is more transparent, but is much slower.
 
 # integral_mask, integral_transform = build_integral_mask_from_raster_dataset(
 #     lbl_ds
@@ -119,7 +113,7 @@ for i, sample in enumerate(dl):
 
 ```
 
-## Processing for `TorchGeo` 
+## Processing for `TorchGeo`
 
 There are two things that need to be fixed to use this dataset with `Torchgeo`. (see. `src/slicksmith_ttom/preprocessing/add_georef_and_timestamps.py` for the implementation).
 
@@ -137,8 +131,11 @@ slicksmith-ttom: "slick": oil spill slicks, "smith": tools, "ttom": dataset auth
 
 ## References
 
-Private overleaf doc with some details for me to remember: https://www.overleaf.com/project/6812010057715ba1a6d19142
+### You can find the dataset parts here:
+- Trujillo-Acatitla, R., Tuxpan-Vargas, J., Ovando-Vázquez, C., & Monterrubio-Martínez, E. (2024). Sentinel-1 SAR Oil spill image dataset for train, validate, and test deep learning models. Part I. [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8346860
+- Trujillo-Acatitla, R., Tuxpan-Vargas, J., Ovando-Vázquez, C., & Monterrubio-Martínez, E. (2024). Sentinel-1 SAR Oil spill image dataset for train, validate, and test deep learning models. Part II. [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8253899
+- Trujillo-Acatitla, R., Tuxpan-Vargas, J., Ovando-Vázquez, C., & Monterrubio-Martínez, E. (2024). Sentinel-1 SAR Oil spill image dataset for train, validate, and test deep learning models. Part III (Version 2024) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.13761290
 
 
-## About the data
-
+### Private overleaf doc 
+Details for me to remember: https://www.overleaf.com/project/6812010057715ba1a6d19142
