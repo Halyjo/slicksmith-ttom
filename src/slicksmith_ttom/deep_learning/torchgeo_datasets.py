@@ -22,10 +22,24 @@ from .BalancedRandomGeoSampler import (
 
 
 class TtomLabelDataset(RasterDataset):
-    """
-    Eg. filename 00000.tif
-    """
+    """RasterDataset for the labels of public oil spill dataset found at [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13761290.svg)](https://doi.org/10.5281/zenodo.13761290).
 
+    Args:
+        paths: one or more root directories to search or files to load
+        crs: :term:`coordinate reference system (CRS)` to warp to
+            (defaults to the CRS of the first file found)
+        res: resolution of the dataset in units of CRS
+            (defaults to the resolution of the first file found)
+        bands: bands to return (defaults to all bands)
+        transforms: a function/transform that takes an input sample
+            and returns a transformed version
+        cache: if True, cache file handle to speed up repeated sampling
+
+    Raises:
+        AssertionError: If *bands* are invalid.
+        DatasetNotFoundError: If dataset is not found.
+
+    """
     filename_glob = "*.tif"
     filename_regex = r"(?P<index>\d+)_(?P<date>\d{8}T\d{6}).tif"
     date_format = "%Y%m%dT%H%M%S"
@@ -33,10 +47,24 @@ class TtomLabelDataset(RasterDataset):
 
 
 class TtomImageDataset(RasterDataset):
-    """
-    Eg. filename 00000.tif
-    """
+    """RasterDataset for the images of public oil spill dataset found at [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13761290.svg)](https://doi.org/10.5281/zenodo.13761290).
 
+    Args:
+        paths: one or more root directories to search or files to load
+        crs: :term:`coordinate reference system (CRS)` to warp to
+            (defaults to the CRS of the first file found)
+        res: resolution of the dataset in units of CRS
+            (defaults to the resolution of the first file found)
+        bands: bands to return (defaults to all bands)
+        transforms: a function/transform that takes an input sample
+            and returns a transformed version
+        cache: if True, cache file handle to speed up repeated sampling
+
+    Raises:
+        AssertionError: If *bands* are invalid.
+        DatasetNotFoundError: If dataset is not found.
+
+    """
     filename_glob = "*.tif"
     filename_regex = r"(?P<index>\d+)_(?P<date>\d{8}T\d{6}).tif"
     date_format = "%Y%m%dT%H%M%S"
