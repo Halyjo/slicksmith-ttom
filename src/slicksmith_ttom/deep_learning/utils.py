@@ -2,13 +2,13 @@ def compute_res_for_shape(sources, target_shape=(100, 100)):
     """
     Compute a (xres, yres) tuple that will make rasterio.merge
     produce `target_shape` when no alignment snapping is requested.
-    
+
     Parameters
     ----------
     sources : sequence of opened rasterio datasets
     target_shape : (int, int)
         Desired (width, height) in pixels.
-    
+
     Returns
     -------
     res : (float, float)
@@ -20,8 +20,10 @@ def compute_res_for_shape(sources, target_shape=(100, 100)):
     lefts, rights, bottoms, tops = [], [], [], []
     for src in sources:
         left, bottom, right, top = src.bounds
-        lefts.append(left); rights.append(right)
-        bottoms.append(bottom); tops.append(top)
+        lefts.append(left)
+        rights.append(right)
+        bottoms.append(bottom)
+        tops.append(top)
 
     w, s, e, n = min(lefts), min(bottoms), max(rights), max(tops)
     width, height = target_shape

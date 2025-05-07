@@ -33,7 +33,7 @@ DATA_SOURCE_URLS = dict(
 
 
 ## Arguments Parser
-class MyArgs(Tap):
+class TapArgs(Tap):
     ## Tasks
     download: bool = True
     process_for_torchgeo: bool = False
@@ -47,15 +47,23 @@ class MyArgs(Tap):
     figures_dir: Path = Path("./figures")
 
 
-    def process_args(self):
-        self.examples_img_src = self.georef_and_timestamp_dst / "Oil_timestamped"
-        self.examples_lbl_src = (
-            self.georef_and_timestamp_dst / "Mask_oil_georef_timestamped"
-        )
-
-
-def main():
+def main(
+    download_dst: os.PathLike,
+    georef_and_timestamp_dst: os.PathLike,
+    figures_dir: os.PathLike,
+    download: bool = True,
+    process_for_torchgeo: bool = False,
+    make_info_plots: bool = False,
+):
     """Does 3 things:
+
+    :param download_dst:
+    :param georef_and_timestamp_dst:
+    :param figures_dir:
+    :param download:
+    :param process_for_torchgeo:
+    :param make_info_plots:
+
 
     Main
     ----
@@ -66,21 +74,23 @@ def main():
     3. make info plots to better understand the data
 
     """
-    args = MyArgs().parse_args()
     save_console_outputs("console_outputs.log")
-    print(args)
 
-    if args.download:
-        download_and_unzip(DATA_SOURCE_URLS, args.download_dst)
+    examples_img_src = Path(georef_and_timestamp_dst) / "Oil_timestamped"
+    examples_lbl_src = Path(georef_and_timestamp_dst) / "Mask_oil_georef_timestamped"
 
-    if args.process_for_torchgeo:
-        make_torchgeo_friendly(args.download_dst, args.georef_and_timestamp_dst)
+    breakpoint()
+    if download:
+        download_and_unzip(DATA_SOURCE_URLS, download_dst)
 
-    if args.make_info_plots:
+    if process_for_torchgeo:
+        make_torchgeo_friendly(download_dst, georef_and_timestamp_dst)
+
+    if make_info_plots:
         save_examples_and_info_plots(
-            img_dir=args.examples_img_src,
-            lbl_dir=args.examples_lbl_src,
-            figures_dir=args.figures_dir,
+            img_dir=examples_img_src,
+            lbl_dir=examples_lbl_src,
+            figures_dir=figures_dir,
             n_batches=10,
         )
 
@@ -188,4 +198,5 @@ def save_examples_and_info_plots(
 
 
 if __name__ == "__main__":
-    main()
+    args = TapArgs().parse_args()
+    main(**args.as_dict())

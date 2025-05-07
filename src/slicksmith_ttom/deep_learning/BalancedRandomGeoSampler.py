@@ -14,6 +14,7 @@ from rasterio.merge import merge as rio_merge
 from rasterio.vrt import WarpedVRT
 from torchgeo.datasets.utils import BoundingBox
 from torchgeo.samplers import RandomGeoSampler, get_random_bounding_box
+
 from .utils import compute_res_for_shape
 
 __all__ = [
@@ -55,6 +56,8 @@ def build_integral_mask_from_raster_dataset(
     band: int = 1,
     resampling: Resampling = Resampling.nearest,
     to_device: Optional[torch.device | str] = "cpu",
+    target_mask_shape: tuple = (512, 512),
+    return_mosaic_raw=False,
 ) -> Tuple[torch.Tensor, Affine]:
     """Mosaic **label rasters** into a single integral image.
 
@@ -103,10 +106,11 @@ def build_integral_mask_from_raster_dataset(
         if src.crs != target_crs:
             src = WarpedVRT(src, crs=target_crs, resampling=resampling)
         srcs.append(src)
-    
-    target_mosaic_shape = (512, 512)
-    res, bounds = compute_res_for_shape(srcs, target_mosaic_shape)
-    mosaic, out_transform = rio_merge(srcs, bounds=bounds, res=res, nodata=0, target_aligned_pixels=True)
+
+    res, bounds = compute_res_for_shape(srcs, target_mask_shape)
+    mosaic, out_transform = rio_merge(
+        srcs, bounds=bounds, res=res, nodata=0, target_aligned_pixels=True
+    )
 
     # Cleanup (close datasets & VRTs)
     for s in srcs:
@@ -121,9 +125,16 @@ def build_integral_mask_from_raster_dataset(
     mask = torch.from_numpy(mask)
     if to_device is not None:
         mask = mask.to(to_device)
-        
-    assert abs(mask.shape[0] - target_mosaic_shape[0]) <= 2, "res in rio_merge produces the wrong mask shape"
-    assert abs(mask.shape[1] - target_mosaic_shape[1]) <= 2, "res in rio_merge produces the wrong mask shape"
+
+    assert abs(mask.shape[0] - target_mask_shape[0]) <= 2, (
+        "res in rio_merge produces the wrong mask shape"
+    )
+    assert abs(mask.shape[1] - target_mask_shape[1]) <= 2, (
+        "res in rio_merge produces the wrong mask shape"
+    )
+
+    if return_mosaic_raw:
+        return build_integral_mask(mask), out_transform, mosaic, bounds
 
     return build_integral_mask(mask), out_transform
 

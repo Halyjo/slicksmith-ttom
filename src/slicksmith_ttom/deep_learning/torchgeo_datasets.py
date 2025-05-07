@@ -13,8 +13,6 @@ from torchgeo.datasets import (
 )
 from torchgeo.samplers import GridGeoSampler
 
-from slicksmith_ttom.vis import info_plots
-
 from .BalancedRandomGeoSampler import (
     BalancedRandomGeoSampler,
     build_integral_mask_from_raster_dataset,
@@ -40,6 +38,7 @@ class TtomLabelDataset(RasterDataset):
         DatasetNotFoundError: If dataset is not found.
 
     """
+
     filename_glob = "*.tif"
     filename_regex = r"(?P<index>\d+)_(?P<date>\d{8}T\d{6}).tif"
     date_format = "%Y%m%dT%H%M%S"
@@ -65,6 +64,7 @@ class TtomImageDataset(RasterDataset):
         DatasetNotFoundError: If dataset is not found.
 
     """
+
     filename_glob = "*.tif"
     filename_regex = r"(?P<index>\d+)_(?P<date>\d{8}T\d{6}).tif"
     date_format = "%Y%m%dT%H%M%S"
@@ -262,6 +262,7 @@ def save_examples(img_dir, lbl_dir, figures_dir: Path):
     # src_dir = Path("/Users/hjo109/Documents/data/Ttom")
     # img_dir = src_dir / "Oil_timestamped"
     # lbl_dir = src_dir / "Mask_oil_georef_timestamped"
+    from slicksmith_ttom.vis import info_plots
 
     os.makedirs(figures_dir, exist_ok=True)
     img_ds = TtomImageDataset(img_dir)

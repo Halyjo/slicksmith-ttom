@@ -1,17 +1,21 @@
 [project]
-name = "slicksmith_ttom"
-version = "0.1.0"
+name = "slicksmith-ttom"
+version = "0.1.1"
 description = "Add your description here"
 authors = [{ name = "Halyjo", email = "harald.l.joakimsen@uit.no" }]
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "folium>=0.19.5",
+    "ipykernel>=6.29.5",
+    "ipynb>=0.5.1",
     "lightning>=2.4",
     "py7zr>=0.22.0",
     "rasterio>=1.4.3",
     "torch>=2.7.0",
     "torchgeo>=0.7.0",
-    "typed-argument-parser>=1.10.1",
+    "torchshow>=0.5.2",
+    "typed-argument-parser",
 ]
 
 [dependency-groups]
