@@ -1,8 +1,6 @@
 # slicksmith-ttom
 
-```{warning}
-This repo is under development and probably very buggy. If there are problems, please raise issues or just fire off PRs.
-```
+*This repo is under development and probably very buggy. If there are problems, please raise issues or just fire off PRs.*
 
 Processing tools for Sentinel-1 SAR Oil spill image dataset for train, validate, and test deep learning models.
 
