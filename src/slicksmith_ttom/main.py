@@ -33,7 +33,7 @@ DATA_SOURCE_URLS = dict(
 
 
 ## Arguments Parser
-class MyArgs(Tap):
+class CLArgs(Tap):
     ## Tasks
     download: bool = True
     process_for_torchgeo: bool = False
@@ -41,9 +41,9 @@ class MyArgs(Tap):
 
     ## Paths
     # = Path("/storage/experiments/data/Ttom/")
-    download_dst: Path
+    download_dst: Path = Path("./Ttom")
     # = Path("/Users/hjo109/Documents/data/Ttom/")
-    georef_and_timestamp_dst: Path
+    georef_and_timestamp_dst: Path = Path("./Ttom/gt_labels")
     figures_dir: Path = Path("./figures")
 
 
@@ -66,7 +66,7 @@ def main():
     3. make info plots to better understand the data
 
     """
-    args = MyArgs().parse_args()
+    args = CLArgs().parse_args()
     save_console_outputs("console_outputs.log")
     print(args)
 
